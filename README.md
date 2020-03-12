@@ -4,7 +4,7 @@ This script can automatically enable IPS policy on all rules inside access polic
 
 
 
-To run script, prepare following parameters:
+To run script, inser values into following variables:
 
 host = "FMC_IP_ADDRESS"
 
