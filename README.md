@@ -2,6 +2,8 @@ Automate FirePOWER IPS policy deployment across Access Polocy Rules
 
 This script can automatically enable IPS policy on all rules inside access policy.
 
+
+
 To run script, prepare following parameters:
 
 host = "FMC_IP_ADDRESS"
