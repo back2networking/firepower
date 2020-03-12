@@ -1,7 +1,9 @@
 ############### Use carefully  ###############
-#The script will retrieve all access control  rules from a policy and update all access rules with IPS Policy.
-#General terms.  PUT: Modify an Existing Object.  POST: Create a New Object.  GET: Obtaining Data from the System
-#API iterations are limited on FMC
+# The script will retrieve all access control  rules from a policy and update all access rules with IPS Policy.
+# General terms.  PUT: Modify an Existing Object.  POST: Create a New Object.  GET: Obtaining Data from the System
+# API iterations are limited on FMC
+# Author - Alexander Chachanidze 
+# achachan@greennet.ge
 
 import json
 import requests
@@ -14,6 +16,8 @@ password = "FMC_PASSWORD"
 domain = "Global"
 acp="FMC_ACP"
 ips_policy="FMC_IPS_POLICY"
+
+#Generates authentication tokens
 
 r = None
 headers = {'Content-Type': 'application/json'}
@@ -35,6 +39,8 @@ except Exception as err:
 
 
 headers['X-auth-access-token'] = token
+
+#Gets Policy uuid and retrieves accessrules uuid
 
 path = "/api/fmc_config/v1/domain/" + uuid + "/policy/accesspolicies"
 server = "https://" + host
@@ -89,6 +95,9 @@ while fullurl:
     finally:
         if r:
             r.close()
+
+#Gets all access rules and their full content
+
 json_response_list=[]
 for i in range(0,len(fullresponse)):
  path = "/api/fmc_config/v1/domain/" + uuid + "/policy/accesspolicies/" + acp_id + "/accessrules/" + fullresponse[i]
@@ -136,6 +145,12 @@ except requests.exceptions.HTTPError as err:
     print("Error in connection --> " + str(err))
 finally:
     if r: r.close()
+
+#Updates all rules with IPS policy / all existing content of the acl rules will be send back while PUT operation, with new JSON key - in this script new value is 'ipsPolicy'.
+#IF you do not send back existing rule configuration aka content and just send a single JSON key, for example ipsPolicy, The rest of the configuration of the rule, except new object value, will be removed.
+#Rules with actions: "trust" , "block" and etc will not accept ips value and return an error.
+#In case you need to apply different IPS policy, modify with appropriate value -> {'name': 'Maximum Detection', 'id': 'd224e29c-6c27-11e0-ac9d-988fc3da9be6', 'type': 'IntrusionPolicy'}
+#IPS Policy id you can get from API-explorer.
 
 for i in range(0,len(fullresponse)):
     path = "/api/fmc_config/v1/domain/" + uuid + "/policy/accesspolicies/" + acp_id + "/accessrules/" + fullresponse[i]
