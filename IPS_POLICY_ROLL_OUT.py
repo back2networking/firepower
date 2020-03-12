@@ -2,8 +2,7 @@
 # The script will retrieve all access control  rules from a policy and update all access rules with IPS Policy.
 # General terms.  PUT: Modify an Existing Object.  POST: Create a New Object.  GET: Obtaining Data from the System
 # API iterations are limited on FMC
-# Author - Alexander Chachanidze 
-# achachan@greennet.ge
+# Author - Alexander Chachanidze/achachan@greennet.ge
 
 import json
 import requests
